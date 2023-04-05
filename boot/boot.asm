@@ -8,7 +8,7 @@ section code
     mov es, eax
 
     mov byte [es:0x00], 'H'; 0xb800 + 0x00 = 0xb800
-    mov byte [es:0x01], 0x30
+    mov byte [es:0x01], 0x40
 
 jmp $
 
