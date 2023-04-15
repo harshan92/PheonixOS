@@ -17,14 +17,20 @@ section code
 .clear:
     mov byte [es:eax], 0; move blank charactors to current text
     inc eax
-    mov byte [es:eax], 0x30; move the background color and color to the next address
+    mov byte [es:eax], 0xB0; move the background color and color to the next address
     inc eax
     cmp eax, 2 * 25 * 80
 
     jl .clear
 
-mov eax, text
+mov eax, text1
+mov ecx, 3*2*80
+push .end
+call .print
 
+.end:
+    mov byte [es:0x00], 'L'
+    jmp $
 
 .print:
     mov dl, byte [eax + ebx]
@@ -41,8 +47,8 @@ mov eax, text
 
 .print_end:
     mov eax, 0
+    ret
 
-jmp $
 
 text: db 'Hello World', 0
 text1: db 'This is another text', 0
