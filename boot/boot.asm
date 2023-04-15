@@ -3,55 +3,21 @@
 
 section code
 
-.init:
-    mov eax, 0xb800
-    mov es, eax
-    mov eax, 0 ; set eax to 0 ->i=0
-    mov ebx, 0 ; index of the charachter in the string that we are printing
-    mov ecx, 0 ; actual address of charactor on the screen
-    mov dl,0; store the actual value on the string
 
-
-.clear:
-    mov byte [es:eax], 0; move blank charactors to current text
-    inc eax
-    mov byte [es:eax], 0xB0; move the background color and color to the next address
-    inc eax
-    cmp eax, 2 * 25 * 80
-
-    jl .clear
-
-mov eax, welcome
-mov ecx, 0*2*80
-call .print
-
-jmp .switch
-
-
-
-.print:
-    mov dl, byte [eax + ebx]
-
-    cmp dl, 0
-    je .print_end
-
-    mov byte [es:ecx], dl
-    inc ebx
-    inc ecx
-    inc ecx
-
-    jmp .print
-
-.print_end:
-    mov eax, 0
-    ret
 .switch:
+    mov bx, 0x1000; This is the location where the code is loaded from hard disk
+    mov ah, 0x02
+    mov al, 30; number of sectors to read from hard disk
+    mov ch, 0x00
+    mov cl, 0x02
+    int 0x13
+
     cli ; Turn off the interrupt
     lgdt [gdt_descriptor] ;Load the GDT table
     mov eax, cr0
     or eax, 0x1
     mov cr0, eax; make the switch
-    jmp protected_start
+    jmp code_seg:protected_start
 
 welcome: db 'Welcome To PhoenixOS',0
 
@@ -68,6 +34,7 @@ protected_start:
     mov ebp, 0x90000
     mov esp, ebp
 
+    call 0x1000
     jmp $
 
 gdt_begin:
