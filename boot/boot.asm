@@ -24,7 +24,7 @@ section code
     jl .clear
 
 mov eax, text
-push .end
+
 
 .print:
     mov dl, byte [eax + ebx]
@@ -40,13 +40,12 @@ push .end
     jmp .print
 
 .print_end:
-    ret
+    mov eax, 0
 
-.end:
-    jmp $
+jmp $
 
-text: db ' Hello World', 0
-text1: db ' This is another text', 0
+text: db 'Hello World', 0
+text1: db 'This is another text', 0
 
 times 510 - ($-$$) db 0x00 ; pads the file with 0s, making it right size
 
