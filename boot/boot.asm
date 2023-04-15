@@ -4,10 +4,14 @@
 section code
 
 .init:
+    mov eax, 0x07c0
+    mov ds, eax
     mov eax, 0xb800
     mov es, eax
     mov eax, 0 ; set eax to 0 ->i=0
-
+    mov ebx, 0 ; index of the charachter in the string that we are printing
+    mov ecx, 0 ; actual address of charactor on the screen
+    mov dl,0; store the actual value on the string
 
 
 .clear:
@@ -15,15 +19,34 @@ section code
     inc eax
     mov byte [es:eax], 0x30; move the background color and color to the next address
     inc eax
-    cmp eax, 2*25*80
+    cmp eax, 2 * 25 * 80
 
     jl .clear
 
-.main:
-    mov byte [es:0x00], 'H'; 0xb800 + 0x00 = 0xb800
-    mov byte [es:0x01], 0x30
+mov eax, text
+push .end
 
-jmp $
+.print:
+    mov dl, byte [eax + ebx]
+
+    cmp dl, 0
+    je .print_end
+
+    mov byte [es:ecx], dl
+    inc ebx
+    inc ecx
+    inc ecx
+
+    jmp .print
+
+.print_end:
+    ret
+
+.end:
+    jmp $
+
+text: db ' Hello World', 0
+text1: db ' This is another text', 0
 
 times 510 - ($-$$) db 0x00 ; pads the file with 0s, making it right size
 
