@@ -45,16 +45,16 @@ int rgb(int r, int g, int b){
     g=(int)(g/2);
     b=(int)(b/3);
 
-    return r << 11 | g << 5 || b;
+    return r << 11 | g << 5 | b;
 }
 
 
 int start(){
     gVBE=(VBEInfoBlock*) VBEInfoAddress;
 
-    for (int i = 0; i < gVBE->char_x_size * gVBE->char_y_size; i++)
+    for (int i = 0; i < gVBE->x_resolution * gVBE->y_resolution; i++)
     {
-       *((unsigned short*) gVBE->screen_ptr+i)=rgb(255,0,0);
+       *((unsigned short*)gVBE->screen_ptr + i)=rgb(255,0,0);
     }
     
     // video_memory=(char*) 0xb8000;
