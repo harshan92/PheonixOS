@@ -3,20 +3,26 @@
 
 section code
 
-
 .switch:
     mov ax, 0x4f01 ;Quering the VBE
     mov cx, 0x117 ; Mode we want
     mov bx, 0x0800 ; Offset for the vbe info structure
     mov es, bx
-    mov di 0x00
+    mov di, 0x00
     int 0x10
 
     ;Make switch to graphic mode
+    mov ax, 0x4f02
+    mov bx, 0x117
+    int 0x10
+
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
 
     mov bx, 0x1000; This is the location where the code is loaded from hard disk
     mov ah, 0x02
-    mov al, 30; number of sectors to read from hard disk
+    mov al, 1; number of sectors to read from hard disk
     mov ch, 0x00
     mov cl, 0x02
     int 0x13
